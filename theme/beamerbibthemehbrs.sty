@@ -1,0 +1,50 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerbibthemehbrs}[2024/02/20]
+
+\mode<presentation>
+
+% Normalize citation formatting to avoid random emphasis
+\DeclareFieldFormat{title}{#1}
+\DeclareFieldFormat[article]{title}{#1}
+\DeclareFieldFormat[book]{title}{#1}
+\DeclareFieldFormat[inbook]{title}{#1}
+\DeclareFieldFormat[incollection]{title}{#1}
+\DeclareFieldFormat[inproceedings]{title}{#1}
+\DeclareFieldFormat[patent]{title}{#1}
+\DeclareFieldFormat[thesis]{title}{#1}
+\DeclareFieldFormat[unpublished]{title}{#1}
+\DeclareFieldFormat{booktitle}{#1}
+\DeclareFieldFormat{journaltitle}{#1}
+
+% Fix et al. formatting
+\renewcommand*{\mkbibnamefamily}[1]{#1}
+\renewcommand*{\mkbibnamegiven}[1]{#1}
+\renewcommand*{\mkbibnamesuffix}[1]{#1}
+\renewcommand*{\mkbibnameprefix}[1]{#1}
+\DeclareDelimFormat{finalnamedelim}{\addspace\&\space}
+\DefineBibliographyStrings{english}{%
+  andothers = {\textup{et\addabbrvspace al\adddot}}
+}
+
+% Define tiny footnote command
+\newcommand{\tinyfootnote}[1]{%
+  \begingroup%
+  \renewcommand{\thefootnote}{\arabic{footnote}}%
+  \footnotetext{\begingroup\tiny\linespread{0.7}\selectfont #1\par\endgroup}%
+  \endgroup%
+}
+
+% Full citation in footnote
+\DeclareCiteCommand{\footfullciteieee}[\footnote]
+  {\usebibmacro{prenote}}
+  {\begingroup\tiny\linespread{0.5}\selectfont\setlength{\parskip}{0pt}%
+        \setlength{\parsep}{0pt}\setlength{\itemsep}{0pt}%
+        \setlength{\topsep}{0pt}\usedriver
+     {\DeclareNameAlias{sortname}{default}}
+     {\thefield{entrytype}}\par\endgroup\vspace{-1.5em}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\mode
+<all>
+\endinput 
