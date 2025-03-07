@@ -1,0 +1,15 @@
+diagnosis: basal cell carcinoma
+seven_point_score: 4
+pigment_network: absent
+streaks: absent
+pigmentation: absent
+regression_structures: blue areas
+dots_and_globules: irregular
+blue_whitish_veil: present
+vascular_structures: within regression
+level_of_diagnostic_difficulty: low
+elevation: palpable
+location: lower limbs
+sex: male
+management: excision
+

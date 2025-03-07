@@ -1,0 +1,14 @@
+diagnosis: melanoma metastasis
+seven_point_score: 1
+pigment_network: absent
+streaks: absent
+pigmentation: diffuse irregular
+regression_structures: absent
+dots_and_globules: regular
+blue_whitish_veil: absent
+vascular_structures: hairpin
+level_of_diagnostic_difficulty: high
+elevation: nodular
+location: lower limbs
+sex: female
+management: excision
