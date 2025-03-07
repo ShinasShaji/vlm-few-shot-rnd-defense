@@ -1,0 +1,11 @@
+%!TEX root = ../ShajiS_RnDReport.tex
+\documentclass[../ShajiS_RnDReport.tex]{subfiles}
+
+\begin{document}
+\begin{abstract}
+\Glspl{vlm} are advanced neural networks that, like \glspl{llm}, learn generalizable knowledge through unsupervised pre-training~\cite{Radford2021} followed by instruction-tuning~\cite{Brown2020} for general multimodal tasks through natural language instructions. While promising for various applications~\cite{Firoozi2023,Kawaharazuka2024}, their deployment in resource-constrained environments presents significant challenges due to their large footprint. This research investigates whether \glspl{vlm} can automate the labor-intensive process of dataset annotation through zero-shot and few-shot in-context learning~\cite{Zhang2023,Tsimpoukelli2021}, through prompting, potentially enabling the training of smaller models suitable for resource-limited deployments.
+
+We evaluate generative \glspl{vlm} on two classification tasks: CIFAR-10~\cite{Krizhevsky2009} and the Seven-Point Checklist Dermatology dataset (Derm7Pt)~\cite{Kawahara2019}. We assess their ability to generate pseudolabels using various prompting strategies and, for CIFAR-10, investigate training lightweight downstream models on these pseudolabels. Our findings show that for CIFAR-10, a general image classification task, downstream models trained on \gls{vlm}-generated pseudolabels can achieve performance within 5\% of the baseline accuracy, with few-shot prompting bringing minor performance gains and zero-shot or low-shot prompting being most efficient. However, on the specialized Derm7Pt dataset, the chosen \glspl{vlm} generally performed at or around random-guessing accuracy, suggesting that knowledge of the task from pre-training is necessary for transferability. Computational resource requirements scale super-linearly with the number of shots. These results demonstrate both the potential and limitations of using \glspl{vlm} for automated dataset annotation to train models for resource-constrained environments.
+
+\end{abstract}
+\end{document}

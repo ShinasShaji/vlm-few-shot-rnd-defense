@@ -1,0 +1,23 @@
+%!TEX root = ../ShajiS_RnDReport.tex
+\documentclass[../ShajiS_RnDReport.tex]{subfiles}
+
+\begin{document}
+    \section{Conclusions}
+    \label{sec:conclusions}
+
+    Our investigation into the few-shot transfer capabilities of \glspl{vlm} reveals a nuanced picture of their potential for dataset annotation tasks. Through experiments on both general image classification (CIFAR-10) and specialized medical imaging (Derm7Pt), we found that model effectiveness varies significantly with domain and approach. For general classification tasks (CIFAR-10), zero-shot or low-shot approaches with simple prompting proved most effective, with downstream models trained on \gls{vlm}-generated pseudolabels achieving performance only 5\% below those trained on ground-truth labels. These downstream models showed remarkable resilience to label noise and maintained consistent performance even with lower quality labels from some experiments. However, when applied to specialized medical imaging tasks (Derm7Pt), the same models along with a model fine-tuned on the medical domain generally performed at or around random-guessing levels, highlighting significant limitations in transferring to domains likely under-represented in their pre-training data. This stark contrast in performance aligns with findings that in-context learning primarily leverages pre-existing knowledge rather than learning new tasks~\cite{Chochlakis2024,Pan2023}, suggesting that the models' success on CIFAR-10 may stem from strong priors about common objects, while their failure on medical images reflects a lack of domain-specific knowledge that cannot be overcome through few-shot examples alone.
+
+    \subsection{Key Findings and Contributions}
+    \label{sec:conclusions:findings}
+
+    Our analysis revealed several crucial insights about \gls{vlm} transfer capabilities. Model architecture significantly impacts both performance, resource efficiency and scaling characteristics. Simpler prompting strategies proved more effective, as additional shots or reasoning requirements often increased computational costs without proportional gains. The combination of few-shot examples with zero-shot prompting consistently outperformed pure few-shot approaches, while additional task information in prompts typically offered marginal improvements with minimal additional computational cost. These findings align with research showing that models often rely more on recognizing familiar tasks through pre-trained priors than learning new capabilities from in-context examples~\cite{Pan2023}, suggesting that effective prompting strategies should focus on activating and guiding these existing capabilities rather than attempting to teach entirely new ones.
+
+    This work advances the understanding of few-shot transfer of \glspl{vlm} by providing a comprehensive evaluation framework for assessing \gls{vlm} transfer capabilities and providing practical guidelines for their use in dataset annotation. Our empirical findings suggesting downstream model resilience to label noise have particular significance for deploying these systems in resource-constrained environments, suggesting that \glspl{vlm} can effectively support the learning of smaller, task-specific models despite imperfect predictions.
+
+    \subsection{Limitations and Future Work}
+    \label{sec:conclusions:limitations}
+    
+    Several technical constraints shaped our investigation. Context length and memory limitations restricted few-shot experiments to a limited number of examples and particularly constrained the use of larger models and high-resolution images. However, the observed trends already show limited or degraded performance scaling with higher number of shots. While we examined both general and specialized domains through CIFAR-10 and Derm7Pt, our findings may not generalize to all vision tasks. The poor performance on the specialized domain also limited our downstream model analysis to general classification tasks.
+
+    Looking ahead, promising research directions include investigating general domain-specific pre-training strategies, developing more efficient \gls{vlm} architectures for scalable high-resolution multi-image processing, and improving pseudolabel quality for downstream training. Other prompting strategies to improve visual grounding and reasoning capabilities may also be explored~\cite{Yang2023a}. Beyond classification, future work could explore \gls{vlm} application generate pseudolabels for downstream tasks such as image captioning and segmentation. While our findings suggest promise for general-domain tasks, significant advances are needed before these models can reliably handle specialized applications.
+\end{document}

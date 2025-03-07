@@ -1,0 +1,402 @@
+%!TEX root = ../ShajiS_RnDReport.tex
+\documentclass[../ShajiS_RnDReport.tex]{subfiles}
+
+\begin{document}
+\section{Appendix}
+\label{sec:appendix}
+
+% Please limit the main part of the report to 20 pages (not including the references, the statement of originality, and the appendix).
+
+% In your appendix, you can add any additional details about your work, such as:
+% \begin{itemize}
+%     \item extra results that do not necessarily belong in Sec. \ref{sec:evaluation}
+%     \item more detailed justifications of certain algorithm design decisions
+%     \item algorithm proofs
+% \end{itemize}
+
+% Additionally, in the case of using AI assistants, describe in detail what content was generated using an AI assistant.
+% In particular, name the AI assistant(s) that you used and how they were used (e.g. which prompts were used, and for which parts of the project).
+
+
+\subsection{Formulation of Metrics}
+
+\subsubsection{CIFAR-10}
+\label{sec:appendix:metrics:cifar10}
+A detailed formulation of the metrics used to evaluate the performance of the \glspl{vlm} and downstream models on the CIFAR-10 dataset is presented here.
+
+\begin{align*}
+    \mathcal{D} &\colon \text{Dataset} \\
+    \mathcal{T} &\colon \text{Set of data types} = \{\text{train}, \text{test}\} \\
+    % \mathcal{C} &\colon \text{Set of valid class names} \\
+    r_{i,t} &\colon \text{Model prediction for sample } i \text{ in data type } t \\
+    y_{i,t} &\colon \text{Ground truth label for sample } i \text{ in data type } t \\
+    N_t &\colon \text{Total number of samples in data type } t
+\end{align*}
+
+The basic accuracy over a data type \(t\) of the dataset \(\mathcal{D}\) is given by:
+\begin{align}
+    \text{correct}_{t}[i] &= \mathbb{1}[r_{i,t} = y_{i,t}] \notag \\
+    \text{accuracy}_{t} &= \frac{1}{N_t} \sum_{i=1}^{N_t} \text{correct}_{t}[i]
+\end{align}
+\label{eq:appendix:metrics:cifar10-accuracy}
+
+\subsubsection{Derm7Pt}
+\label{sec:appendix:metrics:derm7pt}
+A detailed formulation of the metrics used to evaluate the performance of the \glspl{vlm} on the Derm7Pt dataset is presented here.
+
+\begin{align*}
+    \mathcal{D} &\colon \text{Dataset} \\
+    \mathcal{T} &\colon \text{Set of data types (train, test, valid)} \\
+    \mathcal{A} &\colon \text{Set of tag abbreviations} \\
+    \mathcal{L}_a &\colon \text{Set of valid label names for tag } a \in \mathcal{A} \\
+    r_{i,t,a} &\colon \text{Model prediction for sample } i \text{ in type } t \text{ and tag } a \\
+    y_{i,t,a} &\colon \text{Ground truth label for sample } i \text{ in type } t \text{ and tag } a \\
+\end{align*}
+
+\begin{enumerate}[label=\alph*)]
+\item Ground truth counts \(\{C_{t,a,l}\}_{l \in \mathcal{L}_a}\) for each tag and total count \(N_{t,a}\):
+\begin{align*}
+    C_{t,a,l} &= \sum_{i} \mathbb{1}[y_{i,t,a} = l] \\
+    N_{t,a} &= \sum_{l \in \mathcal{L}_a} C_{t,a,l} \quad \text{(total count)} \\
+    \text{where } &t \in \mathcal{T}, a \in \mathcal{A}, l \in \mathcal{L}_a
+\end{align*}
+
+\item Basic accuracy for each tag:
+\begin{align*}
+    \text{correct}_{t,a,l}[i] &= \mathbb{1}[r_{i,t,a} = y_{i,t,a}] \\
+    \text{accuracy}_{t,a} &= \sum_{l \in \mathcal{L}_a} \frac{\sum_i \text{correct}_{t,a,l}[i]}{N_{t,a}}
+\end{align*}
+
+\item Overall accuracy (across tags):
+\begin{align*}
+    \text{accuracy\_overall}_t &= \frac{1}{|\mathcal{A}|} \sum_{a \in \mathcal{A}} \text{accuracy}_{t,a} \\
+\end{align*}
+
+\item Random-guessing accuracy baseline:
+The Gini impurity is a measure of how often a randomly chosen label would be incorrect if chosen at random with independence.
+\begin{align*}
+    \text{Gini impurity} &= 1 - \sum_{l \in \mathcal{L}_a} \left(\frac{C_{t,a,l}}{N_{t,a}}\right)^2
+\end{align*}
+
+When the probability of randomly choosing a classification is uniform, the probability of this choice is \(\frac{1}{|\mathcal{L}_a|}\). Then, the random accuracy becomes:
+\begin{align*}
+    \text{accuracy\_random}_{t,a} &= \sum_{l \in \mathcal{L}_a} \frac{1}{|\mathcal{L}_a|} \cdot \frac{C_{t,a,l}}{N_{t,a}} \\
+    &= \frac{1}{|\mathcal{L}_a|} \sum_{l \in \mathcal{L}_a} \frac{C_{t,a,l}}{N_{t,a}} \\
+    &= \frac{1}{|\mathcal{L}_a|} \cdot 1 = \frac{1}{|\mathcal{L}_a|}
+\end{align*}
+\end{enumerate}
+
+
+\subsubsection{Key points about the formulation:}
+\begin{itemize}
+    \item $\mathbb{1}[\cdot]$ is the indicator function that returns 1 if the condition is true and 0 otherwise.
+    \item The random accuracy represents the expected accuracy if predictions were made randomly according to the class distribution over a tag or category.
+\end{itemize}
+
+
+\subsection{Prompts Used}
+\label{sec:appendix:prompts}
+The prompts and templates used for each experiment in each dataset are presented here.
+
+\subsubsection{CIFAR-10 Prompts}
+\label{sec:appendix:prompts:cifar}
+The prompts and templates used for the CIFAR-10 experiments are presented here.
+
+\paragraph{Base Components}
+\label{sec:appendix:prompts:cifar:base}
+The base components of the CIFAR-10 prompts which are put together to create the complete prompts are presented here.
+
+\begin{itemize}
+    \item \smalltt{Base Prompt} introduces the task and lists the available classes:
+    \begin{promptbox}
+    You are given the task of classifying objects in low-resolution images. 
+    Given each image, determine whether the object belongs to one of the following classes: \\
+    - \placeholder{class1} \\
+    - \placeholder{class2} \\
+    ... \\
+    - \placeholder{class10}
+    \end{promptbox}
+
+    \item \smalltt{Alternate Base Prompt}, a more concise version:
+    \begin{promptbox}
+    You are tasked with classifying images. Your output must be exactly one of the following labels: 
+    \placeholder{class1}, \placeholder{class2}, ..., \placeholder{class10}.
+    \end{promptbox}
+
+    \item \smalltt{Response Request} enforces strict output format:
+    \begin{promptbox}
+    Only respond with an object class name from the list given to you! The response should only contain the term.
+    \end{promptbox}
+
+    \item \smalltt{Alternate Response Request} with additional emphasis on exactness:
+    \begin{promptbox}
+    Only use one of these labels, and nothing else. Do not use synonyms, alternative words, or any other variations -- only use the exact words provided. The response should only contain the term.
+    \end{promptbox}
+
+    \item \smalltt{Reasoning Response Request} for detailed analysis:
+    \begin{promptbox}
+    First, describe in detail about what you see in the image. Then, reason through what you see in the image and why a class best describes it. Finally, write the class name in angled brackets at the end, like <class>.
+    \end{promptbox}
+\end{itemize}
+
+\paragraph{Complete Prompt Structures}
+The complete CIFAR-10 prompts are presented here.
+
+\paragraph*{Zero-Shot Prompts}
+Here, we present the complete 0-shot and 0.5-shot prompts. For the analysis, we only consider the performance of the best prompt from each type (0-shot or 0.5-shot) or the best among all zero-shot prompts for each model.
+
+\begin{itemize}
+    \item Basic 0-shot classification prompt (\smalltt{zero\_shot\_0}):
+    \begin{promptbox}
+    \placeholder{Prefix} \\
+    \placeholder{Response Request} \\
+    Image: \placeholder{Test Image}
+    \end{promptbox}
+
+    \item Alternative 0-shot prompt using the more concise format (\smalltt{zero\_shot\_1}):
+    \begin{promptbox}
+    \placeholder{Alternate Prefix} \\
+    \placeholder{Alternate Response Request} \\
+    Image: \placeholder{Test Image}
+    \end{promptbox}
+
+    \item 0-shot prompt with added urgency through consequence framing (\smalltt{zero\_shot\_2}):
+    \begin{promptbox}
+    \placeholder{Alternate Prefix} \\
+    \placeholder{Alternate Response Request} \\
+    Also note that every time you make an incorrect classification, a cat dies an extremely painful and excruciating death. Thus, you must also ensure that you classify images perfectly and correctly so that no cats are harmed. Now classify the following image according to the given instructions. \\
+    Image: \placeholder{Test Image}
+    \end{promptbox}
+
+    \item 0.5-shot prompt with truck-automobile disambiguation (\smalltt{zero\_five\_shot\_0}):
+    \begin{promptbox}
+    \placeholder{Prefix} \\
+    Note that "truck" only includes big trucks, and all sedans, SUVs, and so on are "automobile". \\
+    \placeholder{Response Request} \\
+    Image: \placeholder{Test Image}
+    \end{promptbox}
+
+    \item Enhanced 0.5-shot prompt with multiple class clarifications (\smalltt{zero\_five\_shot\_1}):
+    \begin{promptbox}
+    \placeholder{Prefix} \\
+    Note that the "truck" class only includes big trucks, and all sedans, SUVs, and belong to the "automobile" class. \\
+    An object of class "ship" is often seen on water. An object of the "bird" class is often colorful, have tails, and are seen within trees and greenery. \\
+    \placeholder{Response Request} \\
+    Image: \placeholder{Test Image}
+    \end{promptbox}
+
+    \item 0.5-shot prompt with reasoning requirement (\smalltt{zero\_five\_shot\_reasoning\_0}):
+    \begin{promptbox}
+    \placeholder{Prefix} \\
+    Note that "truck" only includes big trucks, and all sedans, SUVs, and so on are "automobile". \\
+    \placeholder{Reasoning Request} \\
+    Image: \placeholder{Test Image}
+    \end{promptbox}
+\end{itemize}
+
+\paragraph*{Few-Shot Prompts}
+The complete CIFAR-10 few-shot prompts are presented here.
+
+\begin{itemize}
+    \item Few-shot learning prompt relying on conversation history (\smalltt{few\_shot\_*}):
+    \begin{promptbox}
+    << Empty prompt - relies only on example-based learning through conversation turns >>
+    \placeholder{Image-Answer Turns}
+    \placeholder{Test Image}
+    \end{promptbox}
+
+    \item Basic few-zero shot prompt (\smalltt{few\_zero\_shot\_*}):
+    \begin{promptbox}
+    \placeholder{Prefix} \\
+    \placeholder{Response Request} \\
+    \placeholder{Image-Answer Turns} \\
+    \placeholder{Test Image}
+    \end{promptbox}
+
+    \item Few-five shot prompt with class disambiguation (\smalltt{few\_five\_shot\_*}):
+    \begin{promptbox}
+    \placeholder{Prefix} \\
+    Note that "truck" only includes big trucks, and all sedans, SUVs, and so on are "automobile". \\
+    \placeholder{Response Request} \\
+    \placeholder{Image-Answer Turns} \\
+    \placeholder{Test Image}
+    \end{promptbox}
+\end{itemize}
+
+\subsubsection{Derm7Pt Prompts}
+\label{sec:appendix:prompts:derm}
+The prompts and templates used for the Derm7Pt experiments are presented here.
+
+\paragraph{Base Components}
+\label{sec:appendix:prompts:derm:base}
+The base components of the Derm7Pt prompts which are put together to create the complete prompts are presented here.
+
+\begin{itemize}
+    \item \smalltt{Feature Analysis Prefix} introduces the task for analyzing specific dermatological features:
+    \begin{promptbox}
+    You are given the task of classifying salient features in dermatological [and clinical*] images for making a diagnosis. 
+    Answer the following query about the given image as accurately as possible.
+    \end{promptbox}
+
+    \item \smalltt{Diagnostic Prefix} introduces the task for overall diagnosis:
+    \begin{promptbox}
+    You are given the task of classifying dermatological [and clinical*] images for diagnosing various skin conditions.
+    \end{promptbox}
+
+    \item \smalltt{Response Request} enforces strict output format:
+    \begin{promptbox}
+    Respond only with one of the terms given to you! The response should only contain the term.
+    \end{promptbox}
+
+    \item \smalltt{Reasoning Response Request} for detailed analysis:
+    \begin{promptbox}
+    First, describe in detail about what you see in the image. Then, reason through what you see in the image and why a term best describes it. Finally, write the term in angled brackets at the end, like <term>.
+    \end{promptbox}
+\end{itemize}
+
+\paragraph{Criterion-Specific Queries}
+\label{sec:appendix:prompts:derm:criterion}
+The following queries are used to assess the seven-point checklist criteria and are each designated as a \smalltt{Criterion-Specific Query}:
+
+\begin{itemize}
+    \item \emph{Pigment Network} (\smalltt{PN}) assessment:
+    \begin{promptbox}
+    PN: Which of the following terms best describe the pigmentation network (if any) seen in the image? 
+    \placeholder{info~\cite{Fabbrocini2014}: Pigmentation networks in the lesion may be classified as regular, irregular, or absent based on its presence, prominency of the pigmentation, and its shape or distribution.} \\
+    \placeholder{labels}
+    \end{promptbox}
+
+    \item \emph{Blue-Whitish Veil} (\smalltt{BWV}) assessment:
+    \begin{promptbox}
+    BWV: Which of the following terms best describe any blue-whitish veil (if any) visible in the image? 
+    \placeholder{info~\cite{Madooei2013}: Blue-white veil regions are structureless areas of confluent blue pigment with a ground-glass haze. The colour blue (under dermoscopy) indicates melanin localized within deeper parts of the skin.} \\
+    \placeholder{labels}
+    \end{promptbox}
+
+    \item \emph{Vascular Structures} (\smalltt{VS}) assessment:
+    \begin{promptbox}
+    VS: Which of the following terms best describe vascular structures (if any) present in the image? 
+    \placeholder{info~\cite{Fabbrocini2014}: Vascular structures appear as red structures which may be absent, regularly distributed, or irregularly distributed in a linear, dotted or globular manner outside areas of regression.} \\
+    \placeholder{labels}
+    \end{promptbox}
+
+    \item \emph{Pigmentation} (\smalltt{PIG}) assessment:
+    \begin{promptbox}
+    PIG: Which of the following terms best describe the pigmentation (if any) visible in the image? 
+    \placeholder{info~\cite{Fabbrocini2014}: Pigmentation is the presence of pigment in the lesion, and may be classified as absent, regular, or irregular for brown, gray and black areas of diffuse pigmentation with irregular shape.} \\
+    \placeholder{labels}
+    \end{promptbox}
+
+    \item \emph{Streaks} (\smalltt{STR}) assessment:
+    \begin{promptbox}
+    STR: Which of the following terms best describe streaks (if any) in the shown image? 
+    \placeholder{info~\cite{Mirzaalian2012}: Streaks, also referred to as radial streamings, appear as linear structures or extensions located at the periphery of a lesion and are classified as absent, regular or irregular depending on their presence, appearance of their intensity, texture, and color distribution.} \\
+    \placeholder{labels}
+    \end{promptbox}
+
+    \item \emph{Dots and Globules} \smalltt{DaG} assessment:
+    \begin{promptbox}
+    DaG: Which of the following terms best describe any dots and globules (if any) visible in the image? 
+    \placeholder{info~\cite{Fabbrocini2014}: Dots and globules are black, brown or blue round structures that may be regularly or irregularly distributed within the lesion, or absent.} \\
+    \placeholder{labels}
+    \end{promptbox}
+
+    \item \emph{Regression Structures} (\smalltt{RS}) assessment:
+    \begin{promptbox}
+    RS: Which of the following terms best describe regression structures (if any) present in the image? 
+    \placeholder{info~\cite{Fabbrocini2014}: Regression structures are areas of white scar-like depigmentation or peppering, which may consist of multiple scattered blue-gray dots or granules associated with it.} \\
+    \placeholder{labels}
+    \end{promptbox}
+\end{itemize}
+
+\paragraph{Diagnostic Query}
+\label{sec:appendix:prompts:derm:diagnostic}
+The diagnostic assessment query for the Derm7Pt dataset is presented here.
+
+\begin{itemize}
+    \item \smalltt{Diagnostic Query} for final diagnosis:
+    \begin{promptbox}
+    DIAG: Which of the following diagnoses fit best the given image? \placeholder{labels}
+    \end{promptbox}
+\end{itemize}
+
+\paragraph{Complete Prompt Structures}
+\label{sec:appendix:prompts:derm:complete}
+The complete prompt structures for the Derm7Pt dataset are presented here.
+
+\begin{itemize}
+    \item Feature analysis prompt structure for assessing individual criteria (\smalltt{structured}):
+    \begin{promptbox}
+    \placeholder{Feature Analysis Prefix} \\
+    \placeholder{Criterion-Specific Query} \\
+    \placeholder{Response Request/Reasoning Response Request} \\
+    \placeholder{Image-Answer Turns} \\
+    \placeholder{Test Image}
+    \end{promptbox}
+
+    \item Final diagnostic classification prompt structure (\smalltt{diagnostic}):
+    \begin{promptbox}
+    \placeholder{Diagnostic Prefix} \\
+    \placeholder{Diagnostic Query} \\
+    \placeholder{Response Request/Reasoning Response Request} \\
+    \placeholder{Image-Answer Turns} \\
+    \placeholder{Test Image}
+    \end{promptbox}
+\end{itemize}
+
+\paragraph{Implementation Notes}
+Some notes on the implementation of the prompt templates for the Derm7Pt dataset:
+\begin{itemize}
+    \item The phrase ``and clinical'' is included when clinical images are used (\smalltt{clinical\_*} experiments)
+    \item \texttt{\{info\}} is included in 0.5-shot and few-five-shot experiments, providing additional context about the criterion
+    \item \texttt{\{labels\}} are formatted as bullet points using the template \texttt{- \{label\}\textbackslash n}
+    \item \smalltt{Image-Answer Turns} are added only for all few-shot experiments and may contain the clinical images.
+    \item A prefix \smalltt{Image-\{image\_index\}:} is added to \smalltt{Test Image} in all prompts, where \smalltt{image\_index} is the index of the image in the prompt.
+\end{itemize}
+
+\subsection{Implementation Details}
+\label{sec:appendix:implementation}
+This section provides additional details on the implementation of the experiments for reproducibility.
+
+\subsubsection*{Downstream Model Training Configuration}
+The downstream model training was implemented with the following configuration:
+\begin{itemize}
+    \item Optimizer: AdamW
+    \item Learning rate: \(1 \times 10^{-5}\)
+    \item Loss function: Cross-entropy loss with optional label smoothing of 0.5
+    \item Batch size: 64
+    \item Number of epochs: 50
+    \item Data preprocessing: PyTorch ResNet standard (resize, center crop, normalization)
+    \item Multi-worker data loading (for faster training), with shuffling
+    \item Patience: 5 epochs (on test set accuracy)
+\end{itemize}
+
+\subsection{AI Assistants Used}
+\label{sec:appendix:ai-assistants}
+The following AI models and assistants were used during the development of this work:
+
+\begin{itemize}
+\item Local Models:
+\begin{itemize}
+    \item Llama3.1-8b-Instruct
+    \item Mistral-7B-Instruct
+    \item Mistral Nemo
+    \item Qwen2.5-7B-Instruct
+    \item Qwen2.5-14B-Instruct
+\end{itemize}
+
+\item API-based Models:
+\begin{itemize}
+    \item OpenAI: GPT-4o, GPT-4o-mini, o1, and o1-mini
+    \item Claude: 3.5 Sonnet and Haiku
+\end{itemize}
+
+\item Development Tools:
+\begin{itemize}
+    \item Cursor's proprietary code editor and models for short-horizon and agentic code generation and editing tasks.
+\end{itemize}
+\end{itemize}
+
+All AI-generated content has been critically reviewed and verified for accuracy and appropriateness. The author takes full responsibility for all content in this report.
+
+\end{document}
