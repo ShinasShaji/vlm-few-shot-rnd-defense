@@ -9,7 +9,6 @@
 \newlength{\extrapadding}
 \extrapadding=1.75mm
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% Title Frame
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -48,6 +47,7 @@
     % Input the title
     \usebeamerfont{title}%
     \usebeamercolor[fg]{title}%
+    \vspace{0.5cm}
     \begin{minipage}[b][2\baselineskip][b]{\textwidth}%
       \raggedright
       \inserttitle
@@ -80,7 +80,7 @@
     \begin{minipage}{\textwidth}
       \raggedright%
       \insertauthor%
-    \end{minipage}
+    \end{minipage}    
 
 	\ifx\advisors\empty
 	{}
@@ -115,18 +115,21 @@
 %% Footer
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\patchcmd{\beamer@calculateheadfoot}{\advance\footheight by 4pt}{\advance\footheight by 5ex}{}{}
 \setbeamertemplate{navigation symbols}{}%remove navigation symbols
 
 \defbeamertemplate*{footline}{hbrs}{
  \ifnum\c@framenumber=0\else%
  \leavevmode%
   	\begin{tikzpicture}[overlay]
-    \node[anchor=south west,yshift=\extrapadding, xshift=2\extrapadding] at (current page.south west){
+    \node[anchor=north east, xshift=-12.5\extrapadding] at (current page.north east){
 	\includegraphics[height=0.45cm]{theme/images/Logo-HBRS-cyan.png}
 	};
 
-    \node[anchor=south west,yshift=\extrapadding, xshift=20\extrapadding] at (current page.south west){
+    % \node[anchor=south west,yshift=\extrapadding, xshift=2\extrapadding] at (current page.south west){
+	% \includegraphics[height=0.45cm]{theme/images/Logo-HBRS-cyan.png}
+	% };
+
+    \node[anchor=north east] at (current page.north east){
         \includegraphics[height=0.45cm]{theme/images/b-it.pdf}
     };
 
@@ -140,8 +143,6 @@
         };
     \fi%
 
-
-
     \node[anchor=south east,  yshift=\extrapadding, xshift=-\extrapadding] at (current page.south east) {
         \usebeamerfont{title in head/foot}\insertshorttitle~ -
         \usebeamerfont{author in head/foot}\textbf{\insertshortauthor}\hspace*{2em}
@@ -149,9 +150,6 @@
         \usebeamerfont{framenumber}%
         \insertframenumber/\inserttotalframenumber
         };
-
-
-
 
     \end{tikzpicture}
 \fi
