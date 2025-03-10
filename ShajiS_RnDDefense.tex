@@ -73,6 +73,7 @@ Santosh Thoduka M.Sc. (Fraunhofer IAIS)}
   \end{itemize}
 \end{frame}
 \note{
+- I know that most of you are already familiar with multi-modal models, being in a room of researchers in multimodal foundation models, but perhaps there are people in the audience who are not familiar with the field. So we start with a brief introduction to some concepts we will be needing today \\ 
 - VLMs combine computer vision and natural language processing capabilities in a single neural network \\
 - Pre-training occurs on millions of image-text pairs from the web (e.g., CLIP was trained on 400M image-text pairs) \\
 - Unlike traditional CV models trained for specific tasks, VLMs learn broader understanding that transfers to many tasks \\
@@ -329,7 +330,7 @@ Santosh Thoduka M.Sc. (Fraunhofer IAIS)}
       \textbf{Known VLM Limitations}
       \begin{itemize}
         \item Systematic shortcomings in visual reasoning, spatial relationships, and perspective~\footfullciteieee{Tong2024}
-        \item Inherited LLM issues~\footfullciteieee{Li2023c} such as hallucinations, ungrounded reasoning, prior biases~\footfullciteieee{Chochlakis2024}
+        \item Inherits LLM issues~\footfullciteieee{Li2023c} such as hallucinations, ungrounded reasoning, prior biases~\footfullciteieee{Chochlakis2024}
       \end{itemize}
   \end{columns}
 \end{frame}
@@ -345,6 +346,7 @@ Santosh Thoduka M.Sc. (Fraunhofer IAIS)}
   - Inherited issues from LLMs like hallucinations \\
   - Biases from pre-training data making model ignore visual context \\
 - These limitations highlight areas needing further research \\
+- Something to note: this is a large field of research, and most of the research was done in the last 4-5 years \\
 }
 
 
@@ -354,12 +356,90 @@ Santosh Thoduka M.Sc. (Fraunhofer IAIS)}
   % Content will be added later
 \end{frame}
 
+
 \subsection{Datasets}
-\begin{frame}{Datasets}
-  % Content will be added later
+\begin{frame}{Datasets Used}
+\framesubtitle{CIFAR-10 Dataset}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Dataset Characteristics}
+      \begin{itemize}
+        \item 60,000 RGB images (32x32 pixels)
+        \item 10 balanced categories
+        \item Standard split:
+        \begin{itemize}
+          \item 50,000 training
+          \item 10,000 test (1,000/class)
+        \end{itemize}
+        \item Categories:
+        \begin{itemize}
+          \item Natural: birds, cats, deer, dogs, frogs, horses
+          \item Artificial: airplanes, automobiles, ships, trucks
+        \end{itemize}
+        \item Common vision task
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \begin{figure}
+      \input{figures/cifar-images/cifar_examples}
+      \caption{Example images from CIFAR-10~\footfullciteieee{Krizhevsky2009}}
+      \end{figure}
+  \end{columns}
 \end{frame}
 
-\subsection{Models and Prompting Strategies}
+
+\begin{frame}{Datasets Used}
+\framesubtitle{Seven-Point Checklist Dermatology Dataset (Derm7Pt)}
+\vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Dataset Characteristics}
+      \vspace{-0.4em}
+      \begin{itemize}
+        \item 1,011 dermatological cases for melanoma diagnosis (as well as other skin conditions)
+        \item Multiple image modalities:
+          \begin{itemize}
+            \item Dermoscopic (standardized)
+            \item Clinical (varying conditions)
+          \end{itemize}
+        \item Dataset split (diagnoses and features not uniform):
+          \begin{itemize}
+            \item 413 training cases
+            \item 203 validation cases
+            \item 395 test cases
+          \end{itemize}
+        \item Task-specific dataset -- likely not present in VLM pre-training data
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \vspace{-0.5em}
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.9\linewidth]{figures/derm7pt-images/derm_02.png}
+        \vspace{0.25em}
+        \raggedright
+        \scriptsize\texttt{diagnosis}: melanoma metastasis\\
+        \scriptsize\texttt{pigment\_network}: absent\\
+        \scriptsize\texttt{streaks}: absent\\
+        \scriptsize\texttt{pigmentation}: diffuse irregular\\
+        \scriptsize\texttt{regression\_structures}: absent\\
+        \scriptsize\texttt{dots\_and\_globules}: regular\\
+        \scriptsize\texttt{blue\_whitish\_veil}: absent\\
+        \scriptsize\texttt{vascular\_structures}: hairpin\\
+        \vspace{0.25em}
+        \scriptsize\texttt{seven\_point\_score}: 1\\
+        \scriptsize\texttt{level\_of\_diagnostic\_difficulty}: high
+        \caption{\centering A particularly challenging example case from Derm7Pt}
+      \end{figure}
+  \end{columns}
+\end{frame}
+\note{
+- The Derm7Pt dataset is a collection of dermatological images and annotations for melanoma diagnosis, as well as other skin conditions such as seborrheic keratosis, basal cell carcinoma, types of nevi, and more \\
+- A seven point score of greater than or equal to 3 is to be referred for specialist analysis for melanoma \\
+- The example case shown is a melanoma metastasis case, but note that the seven point score is 1. This is a specifically challenging case, just to demonstrate the kind of examples that are present in the dataset \\
+}
+
+
+\subsection{Models, Prompting Strategies}
 \begin{frame}{Models and Prompting Strategies}
   % Content will be added later
 \end{frame}
@@ -486,7 +566,7 @@ Santosh Thoduka M.Sc. (Fraunhofer IAIS)}
         \item Multiple image modalities:
         \begin{itemize}
           \item Dermoscopic images (standardized)
-          \item Clinical images (inconsistent, optional)
+          \item Clinical images (varying conditions, optional)
         \end{itemize}
         \item Prompting strategies:
         \begin{itemize}
@@ -530,7 +610,7 @@ Santosh Thoduka M.Sc. (Fraunhofer IAIS)}
 \begin{frame}{Dermatology Experiments}
 \framesubtitle{Structured vs Direct Diagnosis}
   \begin{columns}[T]
-    \column{0.5\textwidth}
+    \column{\customcolumnwidth}
       \textbf{Direct Diagnosis Approach}
       \begin{itemize}
         \item Zero-shot baseline:
@@ -544,7 +624,7 @@ Santosh Thoduka M.Sc. (Fraunhofer IAIS)}
             \item Diminishing returns with examples
           \end{itemize}
       \end{itemize}
-    \column{0.5\textwidth}
+    \column{\customcolumnwidth}
       \textbf{Structured Prompting}
       \begin{itemize}
         \item Seven-point checklist categories
@@ -571,7 +651,7 @@ Santosh Thoduka M.Sc. (Fraunhofer IAIS)}
 \begin{frame}{Dermatology Experiments}
 \framesubtitle{Implications and Conclusions}
   \begin{columns}[T]
-    \column{0.5\textwidth}
+    \column{\customcolumnwidth}
       \textbf{Key Insights}
       \begin{itemize}
         \item Pre-training knowledge crucial:
@@ -585,7 +665,7 @@ Santosh Thoduka M.Sc. (Fraunhofer IAIS)}
             \item Multi-modal integration challenges
           \end{itemize}
       \end{itemize}
-    \column{0.5\textwidth}
+    \column{\customcolumnwidth}
       \textbf{Future Directions}
       \begin{itemize}
         \item Specialized training needed:
@@ -662,32 +742,26 @@ Santosh Thoduka M.Sc. (Fraunhofer IAIS)}
   \vspace{-1em}
   \begin{columns}[T]
     \column{\customcolumnwidth}
-      \textbf{Resource-Performance Trade-offs}
+      \textbf{Resource-Performance Trade-offs} -- Diminishing returns with examples:
       \begin{itemize}
-        \item Diminishing returns with examples:
-        \vspace{-1em}
-        \begin{itemize}
-          \item Performance peaks at 4-8 examples
-          \item Resource costs grow super-linearly
-        \end{itemize}
-        \item Architecture and model pre-training considerations:
-        \begin{itemize}
-          \item Perceiver-resampler based models more efficient
-          \item Models pre-trained on multi-image, multi-turn conversation may perform better
-          \item Larger model size \(\nRightarrow\) better performance
-        \end{itemize}
+        \item Performance peaks at 4-8 examples
+        \item Resource costs grow super-linearly
       \end{itemize}
     \column{\customcolumnwidth}
-      \textbf{Recommendations}
+      \textbf{Recommendations} -- Optimizing for practical deployment:
       \begin{itemize}
-        \item Optimal approach:
-        \begin{itemize}
-          \item Zero-shot or 1-2 shot prompting
-          \item Avoid reasoning requirements
-          \item Single-image-per-turn processing when possible
-        \end{itemize}
+        \item Zero-shot or 1-2 shot prompting
+        \item Avoid reasoning requirements
+        \item Single-image-per-turn processing when possible
       \end{itemize}
   \end{columns}
+  \vspace{1em}
+  \textbf{Architecture and model pre-training considerations:}
+    \begin{itemize}
+      \item Perceiver-resampler based models more efficient
+      \item Models pre-trained on multi-image, multi-turn conversation may perform better
+      \item Larger model size \(\nRightarrow\) better performance
+    \end{itemize}
 \end{frame}
 \note{
 - Resource costs grow much faster than performance improvements with additional examples \\
