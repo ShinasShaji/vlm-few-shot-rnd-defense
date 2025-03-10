@@ -121,7 +121,7 @@
  \ifnum\c@framenumber=0\else%
  \leavevmode%
   	\begin{tikzpicture}[overlay]
-    \node[anchor=north east, xshift=-12.5\extrapadding] at (current page.north east){
+    \node[anchor=north east, xshift=-25\extrapadding] at (current page.north east){
 	\includegraphics[height=0.45cm]{theme/images/Logo-HBRS-cyan.png}
 	};
 
@@ -138,7 +138,10 @@
     \else
         % If you have added a third party logo, you might need to adjust its position
         % change the xshift value to something that suits your needs
-        \node[anchor=south west,yshift=\extrapadding, xshift=32\extrapadding] at (current page.south west){
+        % \node[anchor=south west,yshift=\extrapadding, xshift=32\extrapadding] at (current page.south west){
+        %     \includegraphics[height=0.45cm]{\@thirdpartylogo}
+        % };
+        \node[anchor=north east, yshift=-0.1\extrapadding, xshift=-12.5\extrapadding] at (current page.north east){
             \includegraphics[height=0.45cm]{\@thirdpartylogo}
         };
     \fi%
