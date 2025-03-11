@@ -1,9 +1,4 @@
 \section{Methodology}
-\subsection{Experimental Setup}
-\begin{frame}{Experimental Setup}
-  % Content will be added later
-\end{frame}
-
 
 \input{sections/dataset_pages/cifar10}
 \subsection{Datasets}
@@ -25,13 +20,116 @@
 \note{
 - The Derm7Pt dataset is a collection of dermatological images and annotations for melanoma diagnosis, as well as other skin conditions such as seborrheic keratosis, basal cell carcinoma, types of nevi, and more \\
 - A seven point score of greater than or equal to 3 is to be referred for specialist analysis for melanoma \\
-% - The example case shown is a melanoma metastasis case, but note that the seven point score is 1. This is a specifically challenging case, just to demonstrate the kind of examples that are present in the dataset \\
 - The authors provide a python library as an interface to the dataset, and perform grouping of rare cases as well as the grouping of fine-grained categorization into more coarse categories \\
 - In the authors' paper, it is shown that incorporating clinical images as input to their CNN model improves performance \\
 }
 
 
-\subsection{Models, Prompting Strategies}
-\begin{frame}{Models and Prompting Strategies}
-  % Content will be added later
+\subsection{Models Chosen}
+\begin{frame}{Models Chosen}
+\framesubtitle{Which models did we evaluate?}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+    \begin{itemize}
+      \item \textbf{InternVL2-8B:} 8B parameters, 8k context window
+      \item \textbf{MiniCPM-V-2.6:} 8B parameters, \emph{image token compression} with \emph{perceiver-resampler} architecture
+      \item \textbf{Pixtral 12B:} 12B parameters, 128K context window, \emph{handles images natively}
+    \end{itemize}
+    \column{\customcolumnwidth}
+    \begin{itemize}
+      \item \textbf{Phi-3.5-Vision-Instruct:} 4B parameters, 128K context window, designed for constrained environments
+      \item \textbf{Bio-Medical-MultiModal-Llama-3-8B-V1:} 8B parameters, \emph{fine-tuned} multimodal adaptation of Llama-3.1-8B-Instruct for \emph{biomedical} tasks
+    \end{itemize}
+  \end{columns}
+  \textbf{Notes:}
+  \begin{itemize}
+    \setlength{\itemsep}{0em}
+    \item All models use towered architectures, integrating visual encoders with language models, with integrated image tiling, processing methods (except for Pixtral 12B)
+    \item Models chosen for claimed ability in processing interleaved image-text inputs
+  \end{itemize}
 \end{frame}
+\note{
+- InternVL2-8B and MiniCPM-V-2.6 models integrate visual and language processing components \\
+- Phi-3.5-vision-instruct and Pixtral 12B models designed for long-context multimodal processing \\
+- Bio-Medical-MultiModal-Llama-3-8B-V1 specialized for biomedical tasks \\
+- Models selected for their ability to handle multi-image, multi-turn multimodal conversations, or in other words, interleaved text and image inputs \\
+- Notably, all models use their own integrated image tiling and processing methods, except for the Pixtral 12B model, which processes images natively at their full resolution without tiling
+}
+
+
+\subsection{Experimental Design}
+\begin{frame}{Experimental Design}
+\framesubtitle{How did we evaluate VLMs?}
+  \vspace{-1em}
+  \begin{itemize}
+    \item \textbf{Zero-Shot Transfer:}
+    \begin{itemize}
+      \item Evaluated models' ability to perform tasks without prior examples
+      \item Used basic zero-shot prompting and enhanced prompts with task-specific information and chain-of-thought reasoning
+    \end{itemize}
+    \item \textbf{Few-Shot Transfer:}
+    \begin{itemize}
+      \item Assessed impact of providing examples on model performance and resource usage
+      \item Explored pure few-shot experiments and combinations with zero-shot prompting and task-specific information
+    \end{itemize}
+    \item \textbf{Downstream Model Training:}
+    \begin{itemize}
+      \item Evaluated knowledge transfer by training downstream models using VLM-generated pseudolabels
+      \item Compared performance against models trained on ground truth labels to analyze effects of various prompting strategies
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\note{
+- Zero-shot learning assessed through basic and enhanced prompts \\
+- Few-shot learning explored with varying examples and combinations \\
+- Downstream training focused on pseudolabel effectiveness \\
+- Comprehensive evaluation framework used to assess VLM capabilities \\
+}
+
+
+\subsection{Prompting and VLM Inputs}
+\begin{frame}{Prompting and VLM Inputs}
+\framesubtitle{How did we prompt the VLM?}
+  \vspace{-1em}
+  A \emph{Prompting Framework} was developed, that:
+  \begin{itemize}
+    \item Employed a consistent \emph{chat-based} interaction format for fair comparison
+    \item Isolated effects of different prompting components (zero-shot, few-shot, reasoning) with a \emph{modular} prompt structure
+    \item \emph{Minimized biases} through systematic, deterministic and reproducible \emph{randomization} of class lists and example ordering
+  \end{itemize}
+\end{frame}
+\note{
+- Prompting strategy focused on fair comparison and isolating effects of different components \\
+- Chat-based format maintained consistency across experiments \\
+- Standardized preprocessing and prompt templates ensured reproducibility \\
+- Deterministic random seeds used for example selection and class list shuffling \\
+- Core structure included base prompt, example integration, and test instance presentation \\
+}
+
+
+\begin{frame}{Prompting and VLM Inputs}
+\framesubtitle{How did we prompt the VLM?}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+    \textbf{Core Structure of the Prompt:}
+    \begin{itemize}
+      \item \emph{Base Prompt Structure:} Begins with zero-shot task definition, class list, output format, and reasoning requirements to guide model
+      \item \emph{Example Integration:} Alternating user-assistant message pairs for few-shot examples -- answers are provided by user
+      \item \emph{Test Instance Presentation:} Final turn presents test image for classification -- answer is provided by model
+    \end{itemize}
+    \column{\customcolumnwidth}
+    \vspace{-4em}
+    \begin{figure}
+      \centering
+      \includegraphics[width=1.12\linewidth]{figures/prompt_building.pdf}
+      \vspace{-2.4em}
+      \caption{Visualization of the prompt building process}
+    \end{figure}
+  \end{columns}
+\end{frame}
+\note{
+- The example shown is for the CIFAR-10 dataset. A similar process is used for the
+Derm7Pt dataset, but with category-specific prompts for each category and the optional addition of clinical images \\
+}

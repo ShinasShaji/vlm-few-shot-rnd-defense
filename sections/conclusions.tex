@@ -2,10 +2,11 @@
 % \subsection{Key Findings}
 \begin{frame}{Key Findings}
 \framesubtitle{What did we learn about VLM few-shot transfer?}
-  \vspace{-1em}
+  \vspace{-0.4em}
   \begin{columns}[T]
     \column{\customcolumnwidth}
       \textbf{General Domain (CIFAR-10)}
+      \vspace{-0.2em}
       \begin{itemize}
         \item VLMs show fairly good transfer to this task
         \item Downstream models achieve near ground-truth performance
@@ -17,6 +18,7 @@
       \end{itemize}
     \column{\customcolumnwidth}
       \textbf{Specialized Domain (Derm7Pt)}
+      \vspace{-0.2em}
       \begin{itemize}
         \item Limited transfer to specialized domains (Derm7Pt)
         \begin{itemize}
@@ -25,13 +27,15 @@
         \end{itemize}
       \end{itemize}
   \end{columns}
-  \vspace{1em}
+  % \vspace{1em}
   \textbf{We find:}
   \begin{itemize}
     \item Zero/low-shot approaches with simple prompting most effective
     \item Simpler prompting strategies outperformed complex ones
-    \item Examples help model recognize the task (from pre-trained priors)
+    \item Examples help model recognize the task (from pre-trained priors)~\footfullciteieee{Pan2023}
   \end{itemize}
+  \vspace{-0.4em}
+  \blfootnote{\vspace{0.05em}}
 \end{frame}
 \note{
 - Zero-shot and low-shot approaches with simple prompting proved most effective for general domain tasks \\

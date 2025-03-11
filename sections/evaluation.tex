@@ -7,7 +7,6 @@
 \end{frame}
 
 
-\subsection{CIFAR-10 Experiments}
 \begin{frame}{CIFAR-10 Experiments}
 \framesubtitle{A General Image Classification Task}
   \vspace{-1em}
@@ -38,10 +37,10 @@
         \end{itemize}
         \item Few-shot insights:
         \begin{itemize}
-          \item Performance peaks at 4-8 examples
-          \item Super-linear increase in resource usage
+          \item Performance generally peaks at 4-8 examples
           \item Prompting improves low-shot scenarios
         \end{itemize}
+        \item Providing additional task information gives minor performance improvement
       \end{itemize}
   \end{columns}
 \end{frame}
@@ -51,10 +50,8 @@
 - Adding reasoning requirements actually decreased performance by 10-15\% due to format constraints and the limitations of some VLMs in following instructions \\
 - Few-shot performance varied by model: Pixtral and InternVL2 showed improvements up to 8 examples \\
 - MiniCPM and Phi-3.5 peaked earlier at 4-6 examples \\
-- Resource usage increased super-linearly with number of examples \\
-- Memory usage patterns varied: Pixtral showed super-linear increase, MiniCPM remained constant \\
-- Processing time increased dramatically: 2 examples ~10x, 4 examples ~20x, 8 examples 30-50x longer than zero-shot \\
-- Downstream models trained on pseudolabels often outperformed the VLMs themselves \\
+- Without prompting, model generates predictions not in class list, leading to a large number of invalid predictions \\
+- With enough examples, model `learns' the class list, supporting the idea that the model `recognizes' the task and its constraints rather than `learn' it \\
 }
 
 \subsection{Downstream Model Analysis}
@@ -140,7 +137,7 @@
         \end{itemize}
         \item Prompting strategies:
         \begin{itemize}
-          \item Zero-shot with/without reasoning
+          \item Zero-shot with / without reasoning
           \item Few-shot (1-8 examples with and without textual prompts)
           \item Optional: additional task information in structured prompting (0.5-shot)
         \end{itemize}
@@ -155,9 +152,9 @@
     \column{\customcolumnwidth}
       \textbf{Performance Patterns}
       \begin{itemize}
-        \item Most models near random-guess accuracy
+        \item Models performed near random-guess accuracy
+        \item Addition of clinical images as well as reasoning requirements often degraded performance
         \item Domain-specific model struggled significantly, with poor instruction following
-        \item Clinical images often degraded performance
       \end{itemize}
     \column{\customcolumnwidth}
       \textbf{Key Challenges}
@@ -179,6 +176,8 @@
 - It seems we are at the limits of what and how much can be provided as inputs to the model, as well as the knowledge of the model itself \\
 }
 
+
+% Use plots instead of writing out the points
 \begin{frame}{Dermatology Experiments}
 \framesubtitle{Structured vs Direct Diagnosis}
   \begin{columns}[T]
@@ -186,23 +185,27 @@
       \textbf{Direct Diagnosis Approach}
       \begin{itemize}
         \item Zero-shot baseline:
-          \begin{itemize}
-            \item Only Pixtral 12B above random
-            \item Reasoning decreased performance
-          \end{itemize}
+        \begin{itemize}
+          \item Reasoning requirements generally decreased model performance
+          \item Addition of clinical images degraded performance
+        \end{itemize}
         \item Few-shot performance:
-          \begin{itemize}
-            \item Some improvement over zero-shot
-            \item Diminishing returns with examples
-          \end{itemize}
+        \begin{itemize}
+          \item Some improvement over zero-shot performance
+          \item Diminishing returns with examples, generally peaking at 2-4 examples
+        \end{itemize}
       \end{itemize}
     \column{\customcolumnwidth}
     % This is incomplete, refine this, add zero-shot performance
       \textbf{Structured Prompting} on seven-point checklist categories
       \begin{itemize}
+        \item Zero-shot performance:
+          \begin{itemize}
+            \item Addition of task-specific information produced minor improvements
+          \end{itemize}
         \item Few-shot performance:
           \begin{itemize}
-            \item Generally inferior to zero-shot
+            \item Generally inferior to best zero-shot performance
             \item Peak at 2-4 examples for most models
             % Verify this
             % \item Limited benefit from task-specific info
@@ -241,7 +244,7 @@
         \item Few-shot transfer is closer to task \emph{recognition} than task learning
       \end{itemize}
     \column{\customcolumnwidth}
-      \textbf{Future Directions} -- specialized training needed:
+      \textbf{Future Directions} -- specialized training strategies needed:
       \begin{itemize}
         \item for domain-specific pre-training
         \item to improve multi-modal integration
@@ -271,33 +274,33 @@
     \column{\customcolumnwidth}
       \textbf{Memory Usage Patterns}
       \begin{itemize}
-        \item Model-dependent scaling:
+        \item Model-dependent example scaling:
+        \vspace{-1.2em}
         \begin{itemize}
-          \item Pixtral 12B: \emph{Super-linear} increase
-          \item InternVL2, Phi-3.5: \emph{Linear} scaling
+          \item Pixtral 12B: \emph{Super-linear}
+          \item InternVL2, Phi-3.5: \emph{Linear}
           \item MiniCPM: \emph{Near-constant} (perceiver-resampler)
         \end{itemize}
-        \item Clinical images (dermatology experiments): 1-1.75x increase
+        \item Double image inputs (dermatology experiments): 1-1.75x increase (compared to single image inputs)
         \item \emph{Less} than the expected \emph{quadratic} scaling for pure transformers~\footfullciteieee{Vaswani2017}
       \end{itemize}
     \column{\customcolumnwidth}
       \textbf{Processing Time Impact}
       \begin{itemize}
-        \item Near-linear increase with examples (compared to zero-shot):
+        \item Significant increase with examples (compared to zero-shot):
+        \vspace{-1.2em}
         \begin{itemize}
           \item 2 examples: \(\sim\)10x longer
           \item 4 examples: \(\sim\)20x longer
           \item 8 examples: 30-50x longer
         \end{itemize}
-        \item Reasoning requirements: 10-35\% longer
-        \item Clinical images (dermatology experiments): 1.5-2.5x longer
+        \item Reasoning requirements: 10-35\% longer (compared to zero-shot)
+        \item Double image inputs (dermatology experiments): 1.5-2.5x longer (compared to single image inputs)
       \end{itemize}
   \end{columns}
 \end{frame}
 \note{
 - Memory usage patterns vary significantly between model architectures \\
-- Pixtral 12B shows super-linear memory scaling with number of examples, likely due to pure transformer architecture \\
-- InternVL2 and Phi-3.5 show more manageable linear scaling patterns \\
 - MiniCPM's perceiver-resampler architecture enables near-constant memory usage regardless of examples \\
 - Clinical images (additional images) increase memory usage by 1-1.75x \\
 - Processing time increases dramatically with number of examples used \\
@@ -314,7 +317,7 @@
     \column{\customcolumnwidth}
       \textbf{Resource-Performance Trade-offs} -- Diminishing returns with examples:
       \begin{itemize}
-        \item Performance peaks at 4-8 examples
+        \item Performance peaks at \(\sim\)4 examples
         \item Resource costs can grow super-linearly
       \end{itemize}
     \column{\customcolumnwidth}
