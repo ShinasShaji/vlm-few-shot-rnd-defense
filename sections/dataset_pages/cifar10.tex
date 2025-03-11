@@ -1,0 +1,26 @@
+\newcommand{\CifarDatasetSlide}{
+\begin{columns}[T]
+  \column{\customcolumnwidth}
+    \textbf{Dataset Characteristics}
+    \begin{itemize}
+      \item 60,000 RGB images (32x32 pixels)
+      \item 10 balanced categories
+      \item Standard split:
+      \begin{itemize}
+        \item 50,000 training
+        \item 10,000 test (1,000/class)
+      \end{itemize}
+      % \item Categories:
+      % \begin{itemize}
+      %   \item Natural: birds, cats, deer, dogs, frogs, horses
+      %   \item Artificial: airplanes, automobiles, ships, trucks
+      % \end{itemize}
+      \item Common vision task
+    \end{itemize}
+  \column{\customcolumnwidth}
+    \begin{figure}
+    \input{figures/cifar-images/cifar_examples}
+    \caption{Example images from CIFAR-10~\footfullciteieee{Krizhevsky2009}}
+    \end{figure}
+\end{columns}
+}

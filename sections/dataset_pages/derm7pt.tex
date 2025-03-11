@@ -1,0 +1,68 @@
+\newcommand{\DermPtDatasetSlide}[1]{
+\begin{columns}[T]
+  \column{\customcolumnwidth}
+    \textbf{Dataset Characteristics}
+    \vspace{-0.4em}
+    \begin{itemize}
+      \item 1,011 dermatological cases for melanoma diagnosis (as well as other skin conditions)
+      \item Multiple image modalities:
+        \begin{itemize}
+          \item Dermoscopic (standardized)
+          \item Clinical (varying conditions)
+        \end{itemize}
+      % \item Dataset split (diagnoses and features not uniform):
+      %   \begin{itemize}
+      %     \item 413 training cases
+      %     \item 203 validation cases
+      %     \item 395 test cases
+      %   \end{itemize}
+      \item Diagnoses and features are not uniformly distributed
+      \item Task-specific dataset -- likely not present in VLM pre-training data
+    \end{itemize}
+  \column{\customcolumnwidth}
+    \vspace{-0.5em}
+    #1
+\end{columns}
+}
+
+\newcommand{\DermPtFigureOne}{
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/derm7pt-images/derm_01.png}
+    \vspace{0.25em}
+    \raggedright
+    \scriptsize\texttt{diagnosis}: basal cell carcinoma\\
+    \scriptsize\texttt{pigment\_network}: absent\\
+    \scriptsize\texttt{streaks}: absent\\
+    \scriptsize\texttt{pigmentation}: absent\\
+    \scriptsize\texttt{regression\_structures}: blue areas\\
+    \scriptsize\texttt{dots\_and\_globules}: irregular\\
+    \scriptsize\texttt{blue\_whitish\_veil}: present\\
+    \scriptsize\texttt{vascular\_structures}: within regression\\
+    \vspace{0.25em}
+    \scriptsize\texttt{seven\_point\_score}: 4\\
+    \scriptsize\texttt{level\_of\_diagnostic\_difficulty}: low
+    \caption{\centering An example case from Derm7Pt}
+  \end{figure}
+}
+
+\newcommand{\DermPtFigureTwo}{
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/derm7pt-images/derm_02.png}
+    \vspace{0.25em}
+    \raggedright
+    \scriptsize\texttt{diagnosis}: melanoma metastasis\\
+    \scriptsize\texttt{pigment\_network}: absent\\
+    \scriptsize\texttt{streaks}: absent\\
+    \scriptsize\texttt{pigmentation}: diffuse irregular\\
+    \scriptsize\texttt{regression\_structures}: absent\\
+    \scriptsize\texttt{dots\_and\_globules}: regular\\
+    \scriptsize\texttt{blue\_whitish\_veil}: absent\\
+    \scriptsize\texttt{vascular\_structures}: hairpin\\
+    \vspace{0.25em}
+    \scriptsize\texttt{seven\_point\_score}: 1\\
+    \scriptsize\texttt{level\_of\_diagnostic\_difficulty}: high
+    \caption{\centering A particularly challenging example case from Derm7Pt}
+  \end{figure}
+}

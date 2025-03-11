@@ -1,0 +1,37 @@
+\section{Methodology}
+\subsection{Experimental Setup}
+\begin{frame}{Experimental Setup}
+  % Content will be added later
+\end{frame}
+
+
+\input{sections/dataset_pages/cifar10}
+\subsection{Datasets}
+\begin{frame}{Datasets Used}
+  \framesubtitle{CIFAR-10 Dataset}
+  \vspace{-1em}
+  \CifarDatasetSlide
+\end{frame}
+\note{
+
+}
+
+\input{sections/dataset_pages/derm7pt}
+\begin{frame}{Datasets Used}
+  \framesubtitle{Seven-Point Checklist Dermatology Dataset (Derm7Pt)}
+  \vspace{-1em}
+  \DermPtDatasetSlide{\DermPtFigureOne}
+\end{frame}
+\note{
+- The Derm7Pt dataset is a collection of dermatological images and annotations for melanoma diagnosis, as well as other skin conditions such as seborrheic keratosis, basal cell carcinoma, types of nevi, and more \\
+- A seven point score of greater than or equal to 3 is to be referred for specialist analysis for melanoma \\
+% - The example case shown is a melanoma metastasis case, but note that the seven point score is 1. This is a specifically challenging case, just to demonstrate the kind of examples that are present in the dataset \\
+- The authors provide a python library as an interface to the dataset, and perform grouping of rare cases as well as the grouping of fine-grained categorization into more coarse categories \\
+- In the authors' paper, it is shown that incorporating clinical images as input to their CNN model improves performance \\
+}
+
+
+\subsection{Models, Prompting Strategies}
+\begin{frame}{Models and Prompting Strategies}
+  % Content will be added later
+\end{frame}

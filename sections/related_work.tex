@@ -1,0 +1,140 @@
+\section{Related Work}
+\subsection{Background}
+\begin{frame}{Related Work}
+\framesubtitle{Development and Classes of Vision-Language Models}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+    \textbf{VLM Classes}
+    \vspace{-0.4em}
+    \begin{itemize}
+      \item \emph{Alignment models}: Generate unified text-image embeddings (CLIP~\footfullciteieee{Radford2021}, FLAVA) \vspace{-0.2em}
+      \item \emph{Generative models}: Generate text conditioned on multimodal inputs (Flamingo, Frozen~\footfullciteieee{Tsimpoukelli2021}, MiniCPM~\footfullciteieee{Yao2024}, GPT-4o, Claude, etc.)
+    \end{itemize}
+    \column{\customcolumnwidth}
+    \textbf{Architectural Approaches}
+    \vspace{-0.4em}
+    \begin{itemize}
+      \item \emph{Towered}: Separate vision and language models with adapters
+      \item \emph{Unified}: Single model processing both modalities "early on"~\footfullciteieee{ChameleonTeam2024}
+    \end{itemize}
+    \textbf{Key Insight}: Enables framing vision tasks as text generation~\footfullciteieee{Cho2021}, enabling streamlined task transfer
+  \end{columns}
+\end{frame}
+\note{
+- Vision-Language Models (VLMs) have progressed significantly since the introduction of CLIP \\
+- Alignment models, such as CLIP, are designed to learn joint representations but do not generate textual outputs \\
+- In contrast, generative models are capable of producing text responses based on visual inputs \\
+- The Frozen model pioneered the approach of freezing the language model (LLM) while solely training the vision encoder \\
+- Contemporary VLMs often incorporate separate pre-trained components for vision and language, connected through adapters or connectors \\
+- Additionally, unified architectures that process both modalities simultaneously have emerged, enhancing the integration of vision and language tasks \\
+- A pivotal advancement facilitating few-shot transfer is the conceptualization of vision tasks as text generation tasks \\
+- This paradigm allows us to articulate tasks using natural language, eliminating the need for specialized architectures \\
+- The rapid evolution of this field has led to the emergence of models like GPT-4o, which can comprehend and reason about complex visual scenarios \\
+}
+
+
+\begin{frame}{Related Work}
+\framesubtitle{Transfer Learning \& Adaptation Techniques}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Prompting Techniques}: Crafting prompts to improve task performance~\footfullciteieee{Liu2023}
+      \begin{itemize}
+        \item In-context learning: Providing examples in context~\footfullciteieee{Brown2020}
+        \item Chain-of-thought prompting for complex reasoning~\footfullciteieee{Wei2022}
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \textbf{Parameter-Efficient Fine-Tuning}: Typically requires more examples than few-shot regime
+      \begin{itemize}
+        \item Prefix-tuning: Optimizing task-specific prompt vectors~\footfullciteieee{Li2021}
+        \item Low-Rank Adaptation (LoRA)~\footfullciteieee{Hu2021}: decomposes weight updates into smaller trainable matrices
+      \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+- Prompting techniques are crucial for adapting models to new tasks without retraining \\
+- In-context learning allows models to learn from examples without parameter updates \\
+- Chain-of-thought prompting helps models break down complex tasks into simpler steps \\
+- Parameter-efficient fine-tuning methods like prefix-tuning are valuable for low-resource settings \\
+- These techniques are less explored in VLMs compared to NLP models \\
+- Our research contributes by evaluating these methods in the context of VLMs for dataset annotation \\
+}
+
+
+\begin{frame}{Related Work}
+\framesubtitle{Applications and Datasets}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Applicability of VLMs}
+      \vspace{-0.4em}
+      \begin{itemize}
+        \item Large-scale pre-training enables generalization to various tasks
+        \item Traditional DNNs trained for specific tasks
+      \end{itemize}
+      \textbf{LLMs for Data Annotation}
+      \vspace{-0.4em}
+      \begin{itemize}
+        \item LLMs used to generate multimodal instruction-following data~\footfullciteieee{Liu2023a}
+        \item Seen to outperform crowd-workers in data annotation tasks~\footfullciteieee{Gilardi2023}
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \textbf{Key Datasets}:
+      Various datasets exist for various vision tasks.
+      \begin{itemize}
+        \item ImageNet, CIFAR-10~\footfullciteieee{Krizhevsky2009}: Object recognition
+        \item Microsoft COCO: Detection, segmentation, captioning
+        \item Derm7Pt~\footfullciteieee{Kawahara2019}: Specialized dermatology dataset
+        \item MVTec: Anomaly detection
+      \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+- VLMs are used in a wide range of vision tasks, leveraging their ability to generalize from large-scale pre-training \\
+- Traditional DNNs are typically trained on specific datasets for specific tasks, limiting their generalization \\
+- LLMs have been used to generate multimodal instruction-following data to train VLMs, enhancing dataset creation \\
+- LLMs have been seen to outperform human annotators, providing more consistent and scalable data annotation \\
+- Key datasets like ImageNet and CIFAR-10 are benchmarks for evaluating model performance on object recognition \\
+- Specialized datasets like Derm7Pt are crucial for testing models on domain-specific tasks \\
+- Our research leverages these datasets to evaluate the effectiveness of VLMs in generating pseudolabels for downstream tasks \\
+}
+
+
+\subsection{Research Gaps and Limitations}
+\begin{frame}{Research Gaps and Limitations}
+\framesubtitle{What do we address, and what could hinder our work?}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Gaps Addressed in Our Work}
+      \begin{itemize}
+        \item Few-shot transfer of VLMs less explored than NLP counterparts~\footfullciteieee{Liu2023}
+        \item Dataset annotation applications~\footfullciteieee{Tan2024}:
+        \begin{itemize}
+          \item Use of VLMs for dataset annotation less explored
+          \item Analysis of downstream vision models from VLM-generated pseudolabels
+        \end{itemize}
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \textbf{Known VLM Limitations}
+      \begin{itemize}
+        \item Systematic shortcomings in visual reasoning, spatial relationships, and perspective~\footfullciteieee{Tong2024}
+        \item Inherits LLM issues~\footfullciteieee{Li2023c} such as hallucinations, ungrounded reasoning, prior biases~\footfullciteieee{Chochlakis2024}
+      \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+- Few-shot transfer capabilities of VLMs are less studied compared to LLMs in NLP \\
+- Most VLM research focuses on zero-shot or fine-tuning approaches \\
+- Our work systematically evaluates VLMs for dataset annotation: \\
+  - Comprehensive evaluation of different prompting strategies \\
+  - Analysis of pseudolabel quality and consistency \\
+  - Impact on downstream model performance \\
+- We acknowledge important VLM limitations: \\
+  - Difficulty with spatial relationships and perspective \\
+  - Inherited issues from LLMs like hallucinations \\
+  - Biases from pre-training data making model ignore visual context \\
+- These limitations highlight areas needing further research \\
+- Something to note: this is a large field of research, and most of the research was done in the last 4-5 years \\
+}

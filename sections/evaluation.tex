@@ -1,0 +1,345 @@
+\section{Evaluation}
+\subsection{CIFAR-10 Experiments}
+\begin{frame}{CIFAR-10 Experiments}
+\framesubtitle{A General Image Classification Task}
+  \vspace{-1em}
+  \CifarDatasetSlide
+\end{frame}
+
+
+\subsection{CIFAR-10 Experiments}
+\begin{frame}{CIFAR-10 Experiments}
+\framesubtitle{A General Image Classification Task}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Experimental Setup}
+      \begin{itemize}
+        \item Four VLMs evaluated:
+        \begin{itemize}
+          \item Pixtral 12B
+          \item InternVL2
+          \item MiniCPM v2.6
+          \item Phi-3.5 Vision Instruct
+        \end{itemize}
+        \item Prompting strategies:
+        \begin{itemize}
+          \item Zero-shot with / without additional task information and chain-of-thought reasoning
+          \item Few-shot (1-16 examples, with and without textual prompts)
+        \end{itemize}
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \textbf{Key Findings}
+      \begin{itemize}
+        \item Zero-shot performance:
+        \begin{itemize}
+          \item Consistent across prompting strategies
+          \item Reasoning requirements decreased accuracy by 10-15\%
+        \end{itemize}
+        \item Few-shot insights:
+        \begin{itemize}
+          \item Performance peaks at 4-8 examples
+          \item Super-linear increase in resource usage
+          \item Prompting improves low-shot scenarios
+        \end{itemize}
+      \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+- Evaluated four state-of-the-art VLMs on CIFAR-10 image classification \\
+- Zero-shot experiments showed consistent performance across different prompting strategies \\
+- Adding reasoning requirements actually decreased performance by 10-15\% due to format constraints and the limitations of some VLMs in following instructions \\
+- Few-shot performance varied by model: Pixtral and InternVL2 showed improvements up to 8 examples \\
+- MiniCPM and Phi-3.5 peaked earlier at 4-6 examples \\
+- Resource usage increased super-linearly with number of examples \\
+- Memory usage patterns varied: Pixtral showed super-linear increase, MiniCPM remained constant \\
+- Processing time increased dramatically: 2 examples ~10x, 4 examples ~20x, 8 examples 30-50x longer than zero-shot \\
+- Downstream models trained on pseudolabels often outperformed the VLMs themselves \\
+}
+
+\subsection{Downstream Model Analysis}
+\begin{frame}{Downstream Model Analysis}
+\framesubtitle{Performance Characteristics and Insights}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Performance Characteristics}
+      \begin{itemize}
+        \item Downstream models outperformed VLMs, possibly due to:
+        \begin{itemize}
+          \item Pre-trained ResNet-18 model~\footfullciteieee{He2016}
+          \item Focus on pattern recognition compared to image-text modeling
+        \end{itemize}
+        % Rework this section, it is not clear at all
+        \item Label quality vs. dataset size:
+        \begin{itemize}
+          \item Quality more crucial than quantity
+          \item 90\% VLM accuracy threshold
+        \end{itemize}
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \textbf{Key Insights}
+      \begin{itemize}
+        \item Weak dependence of performance on shot count
+        \item Embracing noise: label smoothing improved performance by \(\sim\)1\%
+        \item Practical implications:
+        \begin{itemize}
+          \item Zero/low-shot approaches sufficient
+          \item Simple prompts more effective
+          \item High resilience to label noise
+        \end{itemize}
+      \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+- Downstream models consistently outperformed VLMs due to ImageNet pre-training and focus on pattern recognition \\
+- Performance showed weak dependence on number of examples used in VLM predictions \\
+- Models maintained good performance even with lower-quality labels from 1-shot experiments \\
+- Label quality proved more important than dataset size in training \\
+- Models trained on limited but accurate ground truth labels performed better until VLM accuracy reached ~90\% \\
+- Practical finding: zero-shot or low-shot (1-2 examples) with prompting is most efficient implementation strategy \\
+- Higher shot counts showed diminishing returns despite increased computational costs \\
+- Downstream models showed remarkable resilience to label quality, suggesting practical utility even with imperfect data \\
+}
+
+
+\subsection{Seven-Point Checklist Dermatology Experiments}
+\begin{frame}{Dermatology Experiments}
+\framesubtitle{Experiment Setup and Evaluation Framework}
+  \vspace{-1em}
+  \DermPtDatasetSlide{\DermPtFigureOne}
+\end{frame}
+
+
+\begin{frame}{Dermatology Experiments}
+\framesubtitle{Experiment Setup and Evaluation Framework}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Experimental Setup}
+      \begin{itemize}
+        \item Five VLMs evaluated:
+        \begin{itemize}
+          \item Pixtral 12B, InternVL2
+          \item MiniCPM v2.6, Phi-3.5
+          \item Biomedical Multimodal Model (domain-specific, fine-tuned model)
+        \end{itemize}
+        \item Two experiment types:
+        \begin{itemize}
+          \item Direct diagnosis of condition
+          \item Structured feature understanding (7-point checklist with category-specific prompts)
+        \end{itemize}
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \textbf{Evaluation Framework}
+      \begin{itemize}
+        \item Multiple image modalities:
+        \begin{itemize}
+          \item Dermoscopic images (standardized)
+          \item Clinical images (varying conditions, optional)
+        \end{itemize}
+        \item Prompting strategies:
+        \begin{itemize}
+          \item Zero-shot with/without reasoning
+          \item Few-shot (1-8 examples with and without textual prompts)
+          \item Optional: additional task information in structured prompting (0.5-shot)
+        \end{itemize}
+      \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Dermatology Experiments}
+\framesubtitle{Key Findings}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Performance Patterns}
+      \begin{itemize}
+        \item Most models near random-guess accuracy
+        \item Domain-specific model struggled significantly, with poor instruction following
+        \item Clinical images often degraded performance
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \textbf{Key Challenges}
+      \begin{itemize}
+        \item Limited pre-training knowledge
+        \item Multi-modal integration issues
+        \item Performance degradation with:
+        \begin{itemize}
+          \item Increased examples
+          \item Added reasoning requirements
+          \item Multiple image modalities (addition of clinical images)
+        \end{itemize}
+      \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+- Most models near random-guess accuracy, indicating fundamental limitations of VLMs for this task \\
+- The domain-specific Biomedical Multimodal Model struggled, and this is likely because the fine-tuning caused regressions in the instruction-following capabilities of the model. This is somewhat of a known issue, and goes along the lines of catastrophic forgetting -- but this is something that a few-shot or zero-shot transferred model may not suffer from \\
+- It seems we are at the limits of what and how much can be provided as inputs to the model, as well as the knowledge of the model itself \\
+}
+
+\begin{frame}{Dermatology Experiments}
+\framesubtitle{Structured vs Direct Diagnosis}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Direct Diagnosis Approach}
+      \begin{itemize}
+        \item Zero-shot baseline:
+          \begin{itemize}
+            \item Only Pixtral 12B above random
+            \item Reasoning decreased performance
+          \end{itemize}
+        \item Few-shot performance:
+          \begin{itemize}
+            \item Some improvement over zero-shot
+            \item Diminishing returns with examples
+          \end{itemize}
+      \end{itemize}
+    \column{\customcolumnwidth}
+    % This is incomplete, refine this, add zero-shot performance
+      \textbf{Structured Prompting} on seven-point checklist categories
+      \begin{itemize}
+        \item Few-shot performance:
+          \begin{itemize}
+            \item Generally inferior to zero-shot
+            \item Peak at 2-4 examples for most models
+            % Verify this
+            % \item Limited benefit from task-specific info
+          \end{itemize}
+      \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+- The Derm7Pt experiments revealed significant challenges in applying VLMs to specialized medical tasks \\
+- Most models performed at or around random-guessing accuracy, indicating fundamental limitations \\
+- Adding clinical images alongside dermoscopic images often degraded performance \\
+- Even the domain-specific Biomedical Multimodal Model struggled significantly \\
+- Resource requirements increased substantially with experiment complexity \\
+- Direct diagnosis showed some promise with few-shot learning, while structured prompting was generally less effective \\
+- These findings suggest current VLMs need significant improvements for specialized medical tasks \\
+- The results highlight the importance of pre-existing task knowledge in few-shot learning success \\
+}
+
+\begin{frame}{Implications and Conclusions}
+\framesubtitle{What did we learn from the experiments?}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Key Insights}
+      \begin{itemize}
+        \item Pre-training knowledge crucial:
+          \begin{itemize}
+            \item Poor performance on specialized tasks
+            \item Transferability to specialized domains not guaranteed
+          \end{itemize}
+        \item Architectural considerations:
+          \begin{itemize}
+            \item Model size \(\nRightarrow\) performance
+            \item Multi-modal integration challenges exist
+          \end{itemize}
+        \item Few-shot transfer is closer to task \emph{recognition} than task learning
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \textbf{Future Directions} -- specialized training needed:
+      \begin{itemize}
+        \item for domain-specific pre-training
+        \item to improve multi-modal integration
+      \end{itemize}
+      \textbf{Practical Considerations}
+      \begin{itemize}
+        \item Prefer simpler prompting strategies
+        \item Consider resource-performance trade-offs
+        \item Formulate task-specific evaluation metrics
+        \item Models pre-trained on multi-image, multi-turn conversation -- better
+      \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+- Context length and memory limitations restricted few-shot experiments to limited examples and constrained larger models \\
+- Observed trends already show limited/degraded performance scaling with higher number of examples \\
+- Poor performance on specialized domains suggests models rely more on pre-trained priors than learning new capabilities \\
+- Promising research directions include investigating domain-specific pre-training strategies \\
+- Each kind of image is a different modality in the dermatology case. The model may not know how to look at both image which are two forms of the same thing, and reason and understand the relationship between the two. The integration of the two modalities is a challenge. How do you look at to forms of the same thing and reason about the relationship between the two? \\
+}
+
+\subsection{Compute Analysis}
+\begin{frame}{Compute Analysis}
+\framesubtitle{Analysis of Memory and Processing Time}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Memory Usage Patterns}
+      \begin{itemize}
+        \item Model-dependent scaling:
+        \begin{itemize}
+          \item Pixtral 12B: \emph{Super-linear} increase
+          \item InternVL2, Phi-3.5: \emph{Linear} scaling
+          \item MiniCPM: \emph{Near-constant} (perceiver-resampler)
+        \end{itemize}
+        \item Clinical images (dermatology experiments): 1-1.75x increase
+        \item \emph{Less} than the expected \emph{quadratic} scaling for pure transformers~\footfullciteieee{Vaswani2017}
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \textbf{Processing Time Impact}
+      \begin{itemize}
+        \item Near-linear increase with examples (compared to zero-shot):
+        \begin{itemize}
+          \item 2 examples: \(\sim\)10x longer
+          \item 4 examples: \(\sim\)20x longer
+          \item 8 examples: 30-50x longer
+        \end{itemize}
+        \item Reasoning requirements: 10-35\% longer
+        \item Clinical images (dermatology experiments): 1.5-2.5x longer
+      \end{itemize}
+  \end{columns}
+\end{frame}
+\note{
+- Memory usage patterns vary significantly between model architectures \\
+- Pixtral 12B shows super-linear memory scaling with number of examples, likely due to pure transformer architecture \\
+- InternVL2 and Phi-3.5 show more manageable linear scaling patterns \\
+- MiniCPM's perceiver-resampler architecture enables near-constant memory usage regardless of examples \\
+- Clinical images (additional images) increase memory usage by 1-1.75x \\
+- Processing time increases dramatically with number of examples used \\
+- Adding reasoning requirements (e.g., chain-of-thought) increases processing time by 10-35\% due to the generation of more output tokens \\
+- Clinical images take 1.5-2.5x longer to process due to increased number of images and complexity \\
+- These patterns align with theoretical expectations for optimized transformer architectures, and are lower than the expected quadratic scaling \\
+}
+
+
+\begin{frame}{Compute Analysis}
+\framesubtitle{Practical Implications}
+  \vspace{-1em}
+  \begin{columns}[T]
+    \column{\customcolumnwidth}
+      \textbf{Resource-Performance Trade-offs} -- Diminishing returns with examples:
+      \begin{itemize}
+        \item Performance peaks at 4-8 examples
+        \item Resource costs can grow super-linearly
+      \end{itemize}
+    \column{\customcolumnwidth}
+      \textbf{Recommendations} -- Optimizing for practical deployment:
+      \begin{itemize}
+        \item Zero-shot or 1-2 shots with prompting
+        \item Avoid reasoning requirements (unless the task calls for it)
+        \item Single-image-per-turn processing when possible
+      \end{itemize}
+  \end{columns}
+  \vspace{1em}
+  \textbf{Architecture and model pre-training considerations:}
+    \begin{itemize}
+      \item Perceiver-resampler based models more efficient
+      \item Larger model size \(\nRightarrow\) better performance
+    \end{itemize}
+\end{frame}
+\note{
+- Resource costs grow much faster than performance improvements with additional examples \\
+- Perceiver-resampler architectures (like in MiniCPM) show better memory efficiency \\
+- However, there may be a trade-off between resource efficiency and model performance \\
+- Zero-shot or low-shot (1-2 examples) provides best balance of performance vs. resources \\
+- Avoiding reasoning requirements saves significant processing time without major performance loss \\
+- Why does reasoning not work? The tasks we chose are not reasoning-heavy tasks, but rather test visual recognition and grounding capabilities. Ungrounded reasoning cannot improve the recognition and grounding capabilties of the model \\
+- Multi-image processing (e.g., clinical + dermoscopic) significantly impacts resources \\
+- Architecture choice crucial for scaling to larger datasets or more complex tasks \\
+- These findings help inform practical deployment strategies for VLMs in real applications \\
+}
