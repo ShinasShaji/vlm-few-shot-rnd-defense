@@ -1,4 +1,5 @@
 \section{Introduction}
+\subsection{Background}
 \begin{frame}{Introduction}
 \framesubtitle{Vision-Language Models (VLMs)}
   \begin{itemize}
@@ -15,7 +16,7 @@
 \note{
 - I know that most of you are already familiar with multi-modal models, being in a room of researchers in multimodal foundation models, but perhaps there are people in the audience who are not familiar with the field. So we start with a brief introduction to some concepts we will be needing today \\ 
 - VLMs combine computer vision and natural language processing capabilities in a single neural network \\
-- Pre-training occurs on millions of image-text pairs from the web (e.g., CLIP was trained on 400M image-text pairs) \\
+- Pre-training occurs on web-scale image-text datasets (e.g., CLIP was trained on 400M image-text pairs). In this way, models learn to understand the relationship between images and text and also predict one from the other \\
 - Unlike traditional CV models trained for specific tasks, VLMs learn broader understanding that transfers to many tasks \\
 - Similar to how ChatGPT can answer questions on many topics, VLMs can handle multiple visual tasks \\
 }
@@ -58,7 +59,7 @@
 }
 
 
-\subsection{Motivation}
+% \subsection{Motivation}
 \begin{frame}{Motivation}
 \framesubtitle{Few-Shot Transfer}
   \vspace{-1em}
@@ -113,36 +114,4 @@
 - Most robots have limited computational capabilities - often a single low-power GPU or CPU \\
 - Pseudolabels are automatically generated annotations that can be used in place of human-created labels \\
 - The key insight: we don't need to deploy the large model - we use it to train a smaller, more efficient model \\
-}
-
-
-% \subsection{Proposed Approach}
-\begin{frame}{Proposed Approach}
-\framesubtitle{Evaluating VLMs for Pseudolabel Generation}
-  \textbf{Approach:} Evaluate VLMs on generating \emph{accurate pseudolabels} under various \emph{zero-shot} and \emph{few-shot} transfer conditions
-  \vspace{0.3em}
-    
-  \begin{columns}[T]
-    \column{0.55\textwidth}
-      \centering \textbf{Key Research Aspects}
-      \begin{enumerate}
-        \item How does the \emph{number of examples} (few-shot vs. zero-shot) affect pseudolabel quality?
-        \item What are the \emph{computational requirements} for practical application?
-        \item How effective are the \emph{downstream models} trained on pseudolabels?
-      \end{enumerate}
-
-    \column{0.45\textwidth}
-    \begin{figure}
-      \includegraphics[width=\textwidth]{figures/vlm_transfer_downstream.pdf}
-      \caption{\centering Using VLMs to generate pseudolabels for downstream model training}
-    \end{figure}
-  \end{columns}
-\end{frame}
-\note{
-- Zero-shot means only describing the task in natural language; few-shot means providing examples \\
-- We tested multiple prompting strategies to find the most effective approach \\
-- We examined both common visual tasks (CIFAR-10) and specialized tasks (dermatology) to see if few-shot transfer is generalizable \\
-- This design helps us understand when VLMs can be reliably transferred for automatic labeling \\
-- For computational requirements, we measured inference time, memory usage, and scaling properties \\
-- Downstream models were evaluated against models trained on ground truth labels \\
 }

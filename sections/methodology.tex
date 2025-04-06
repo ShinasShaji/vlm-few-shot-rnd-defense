@@ -1,5 +1,36 @@
-\section{Methodology}
+\section{Proposed Approach}
+\begin{frame}{Proposed Approach}
+\framesubtitle{Evaluating VLMs for Pseudolabel Generation}
+  \textbf{Approach:} Evaluate VLMs on generating \emph{accurate pseudolabels} for image classification datasets under various \emph{zero-shot} and \emph{few-shot} transfer conditions
+  \vspace{0.3em}
+    
+  \begin{columns}[T]
+    \column{0.55\textwidth}
+      \centering \textbf{Key Research Aspects}
+      \begin{enumerate}
+        \item How does the \emph{number of examples} (few-shot vs. zero-shot) affect pseudolabel quality?
+        \item What are the \emph{computational requirements} for practical application?
+        \item How effective are the \emph{downstream models} trained on pseudolabels?
+      \end{enumerate}
 
+    \column{0.45\textwidth}
+    \begin{figure}
+      \includegraphics[width=\textwidth]{figures/vlm_transfer_downstream.pdf}
+      \caption{\centering Using VLMs to generate pseudolabels for downstream model training}
+    \end{figure}
+  \end{columns}
+\end{frame}
+\note{
+- Zero-shot means only describing the task in natural language; few-shot means providing examples \\
+- We tested multiple prompting strategies to find the most effective approach \\
+- We examined both common visual tasks (CIFAR-10) and specialized tasks (dermatology) to see if few-shot transfer is generalizable \\
+- This design helps us understand when VLMs can be reliably transferred for automatic labeling \\
+- For computational requirements, we measured inference time, memory usage, and scaling properties \\
+- Downstream models were evaluated against models trained on ground truth labels \\
+}
+
+
+\section{Methodology}
 \input{sections/dataset_pages/cifar10}
 \subsection{Datasets}
 \begin{frame}{Datasets Used}
@@ -45,14 +76,14 @@
   \textbf{Notes:}
   \begin{itemize}
     \setlength{\itemsep}{0em}
-    \item All models use towered architectures, integrating visual encoders with language models, with integrated image tiling, processing methods (except for Pixtral 12B)
-    \item Models chosen for claimed ability in processing interleaved image-text inputs
+    \item All models use towered architectures, integrating visual encoders with language models, with \emph{integrated image} tiling, \emph{processing} methods (except for Pixtral)
+    \item Models chosen for claimed ability in processing \emph{interleaved} image-text inputs
   \end{itemize}
 \end{frame}
 \note{
 - InternVL2-8B and MiniCPM-V-2.6 models integrate visual and language processing components \\
-- Phi-3.5-vision-instruct and Pixtral 12B models designed for long-context multimodal processing \\
-- Bio-Medical-MultiModal-Llama-3-8B-V1 specialized for biomedical tasks \\
+- Phi-3.5-vision-instruct and Pixtral 12B models are designed for long-context multimodal processing \\
+- Bio-Medical-MultiModal-Llama-3-8B-V1 is specialized for biomedical tasks \\
 - Models selected for their ability to handle multi-image, multi-turn multimodal conversations, or in other words, interleaved text and image inputs \\
 - Notably, all models use their own integrated image tiling and processing methods, except for the Pixtral 12B model, which processes images natively at their full resolution without tiling
 }
@@ -65,18 +96,18 @@
   \begin{itemize}
     \item \textbf{Zero-Shot Transfer:}
     \begin{itemize}
-      \item Evaluated models' ability to perform tasks without prior examples
-      \item Used basic zero-shot prompting and enhanced prompts with task-specific information and chain-of-thought reasoning
+      \item Evaluated ability to perform tasks \emph{without prior examples}
+      \item Used basic and enhanced prompts with task-specific information and chain-of-thought reasoning
     \end{itemize}
     \item \textbf{Few-Shot Transfer:}
     \begin{itemize}
-      \item Assessed impact of providing examples on model performance and resource usage
-      \item Explored pure few-shot experiments and combinations with zero-shot prompting and task-specific information
+      \item Assessed effects of \emph{providing examples} on model performance, resource usage
+      \item Explored pure few-shot experiments and combinations with prompting
     \end{itemize}
     \item \textbf{Downstream Model Training:}
     \begin{itemize}
-      \item Evaluated knowledge transfer by training downstream models using VLM-generated pseudolabels
-      \item Compared performance against models trained on ground truth labels to analyze effects of various prompting strategies
+      \item Evaluated \emph{knowledge transfer} by training downstream models from pseudolabels
+      \item Analyzed effects of transfer methods on downstream model performance
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -88,7 +119,7 @@
 }
 
 
-\subsection{Prompting and VLM Inputs}
+% \subsection{Prompting and VLM Inputs}
 \begin{frame}{Prompting and VLM Inputs}
 \framesubtitle{How did we prompt the VLM?}
   \vspace{-1em}
@@ -115,9 +146,9 @@
     \column{\customcolumnwidth}
     \textbf{Core Structure of the Prompt:}
     \begin{itemize}
-      \item \emph{Base Prompt Structure:} Begins with zero-shot task definition, class list, output format, and reasoning requirements to guide model
-      \item \emph{Example Integration:} Alternating user-assistant message pairs for few-shot examples -- answers are provided by user
-      \item \emph{Test Instance Presentation:} Final turn presents test image for classification -- answer is provided by model
+      \item \textbf{Base Prompt Structure:} \emph{Guides models} with task definition and output format
+      \item \textbf{Example Integration:} Alternating user-assistant message pairs for \emph{few-shot examples}
+      \item \textbf{Test Instance Presentation:} Test image presented for classification in \emph{final turn}
     \end{itemize}
     \column{\customcolumnwidth}
     \vspace{-4em}
@@ -130,6 +161,8 @@
   \end{columns}
 \end{frame}
 \note{
-- The example shown is for the CIFAR-10 dataset. A similar process is used for the
-Derm7Pt dataset, but with category-specific prompts for each category and the optional addition of clinical images \\
+- The example shown is for the CIFAR-10 dataset. A similar process is used for the Derm7Pt dataset, but with category-specific prompts for each category and the optional addition of clinical images \\
+- Base prompt structure guides models with task definition, class list, reasoning requirements, and output format
+- Alternating user-assistant message pairs for few-shot examples -- answers are provided by user
+- Final turn presents test image for classification -- answer is provided by model
 }

@@ -8,45 +8,63 @@
       \textbf{General Domain (CIFAR-10)}
       \vspace{-0.2em}
       \begin{itemize}
-        \item VLMs show fairly good transfer to this task
+        \item VLMs show \emph{fairly good transfer} to this task
         \item Downstream models achieve near ground-truth performance
         \begin{itemize}
           \item Only 5\% below models trained from ground-truth
-          \item Resilient to pseudolabel noise
-          \item Outperform VLMs in most cases
+          \item \emph{Resilient} to pseudolabel noise
+          % \item Outperform VLMs in most cases
         \end{itemize}
       \end{itemize}
     \column{\customcolumnwidth}
       \textbf{Specialized Domain (Derm7Pt)}
       \vspace{-0.2em}
       \begin{itemize}
-        \item Limited transfer to specialized domains (Derm7Pt)
+        \item \emph{Limited transfer} to specialized domains (Derm7Pt)
         \begin{itemize}
           \item Performance near random-guessing
-          \item Suggests strong reliance on pre-trained knowledge
+          \item Suggests \emph{strong reliance} on pre-trained knowledge
         \end{itemize}
+        \item Multi-modal \emph{integration challenges} exist
       \end{itemize}
   \end{columns}
-  % \vspace{1em}
+  % \vspace{0.2em}
   \textbf{We find:}
   \begin{itemize}
-    \item Zero/low-shot approaches with simple prompting most effective
-    \item Simpler prompting strategies outperformed complex ones
-    \item Examples help model recognize the task (from pre-trained priors)~\footfullciteieee{Pan2023}
+    \item Zero / low-shot approaches with \emph{simple prompting} most effective
+    \item Simpler prompting strategies generally outperform complex ones
+    \item Examples help model \emph{recognize} the task (from pre-trained priors)~\footfullciteieee{Pan2023}
   \end{itemize}
   \vspace{-0.4em}
   \blfootnote{\vspace{0.05em}}
 \end{frame}
 \note{
 - Zero-shot and low-shot approaches with simple prompting proved most effective for general domain tasks \\
-- Downstream models trained on VLM-generated pseudolabels achieved impressive performance, only 5\% below ground truth \\
-- Models showed remarkable resilience to label noise, maintaining consistent performance \\
 - However, performance degraded significantly on specialized medical tasks (Derm7Pt). The domain is likely underrepresented in the pre-training data of the VLMs \\
-- This aligns with research showing models rely more on pre-trained knowledge than learning new capabilities \\
-- Architecture choices significantly impacted both performance and resource efficiency \\
+- Architecture choices significantly impacted both performance and resource efficiency, e.g. the Perceiver-resampler architecture used in one of our models performs quite well, accuracy, memory, and time-wise \\
 - Additional shots or reasoning requirements often increased costs without proportional gains \\
-- Results suggest focusing on activating existing capabilities rather than teaching new ones \\
+- Results suggest focusing on activating existing capabilities and knowledge rather than teaching new ones \\
+- Each kind of image is a different modality in the dermatology case. The model may not know how to look at both image which are two forms of the same thing, and reason and understand the relationship between the two. The integration of the two modalities is a challenge. How do you look at to forms of the same thing and reason about the relationship between the two? \\
 }
+
+
+\begin{frame}{Key Contributions}
+\framesubtitle{How did we help?}
+  \vspace{-1em}
+  \begin{itemize}
+    \item Advancing the understanding of \emph{few-shot transfer} of VLMs:
+    \begin{itemize}
+      \item providing a comprehensive \emph{evaluation framework} for assessing VLM transfer
+      \item providing \emph{practical guidelines} for their transfer to dataset annotation tasks to train task-specific downstream models
+    \end{itemize}
+    \item Empirical findings suggest downstream models are \emph{resilient to label noise}:
+    \begin{itemize}
+      \item significant for deploying these systems in \emph{resource-constrained} environments
+      \item suggests that VLMs \emph{can} support the learning of smaller, task-specific models despite imperfect predictions
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\note{}
 
 
 % \subsection{Limitations and Future Work}
@@ -58,63 +76,41 @@
       \textbf{Technical Limitations}
       \begin{itemize}
         \item Context length and memory constraints
-        \begin{itemize}
-          \item Limits number of examples
-          \item Limits image resolution
-          \item Restricts use of larger models
-        \end{itemize}
-        \item Limited / degraded performance scaling with number of examples
-        \item Limited generalization to specialized domains
+        \item Limited / \emph{degraded performance scaling} with number of examples
+        \item \emph{Limited generalization} to specialized domains
       \end{itemize}
-      The findings of this work may not generalize to all vision tasks
+      \textbf{General Limitations}
+      \begin{itemize}
+        \item Limited selection of models, datasets, tasks
+        \item Findings of this work may not generalize to all vision tasks
+      \end{itemize}
       \column{\customcolumnwidth}
       \textbf{Future Research Directions}
       \begin{itemize}
-        \item Generalizable domain-specific pre-training strategies
-        \item More efficient VLM architectures for multi-image processing
-        \item Improving prompting strategies and visual grounding~\footfullciteieee{Yang2023}
-        \item Extending investigation to other vision tasks:
-        \begin{itemize}
-          \item Image captioning
-          \item Segmentation
-        \end{itemize}
+        \item Generalizable \emph{domain-transferable} pre-training strategies
+        \item More \emph{efficient} VLM architectures for multi-image processing
+        \item Improving prompting strategies and \emph{visual grounding}~\footfullciteieee{Yang2023}
+        \item Extending investigation to \emph{other vision tasks}
       \end{itemize}
   \end{columns}
 \end{frame}
 \note{
-- Context length and memory limitations restricted few-shot experiments to limited examples and constrained larger models \\
+- Context length and memory limitations restricted few-shot experiments to limited examples and constrained larger models, and high resolution images had to be rescaled to fit more examples \\
 - Poor performance on specialized domains suggests models rely more on pre-trained priors than learning new capabilities \\
 - There are some things that you can tell beforehand are bad ideas, and this was not specifically one of them. We expected before starting the project that more examples would strictly improve performance, but this was not the case. In NLP and LLMs, few-shot transfer and chain-of-thought prompting is extremely effective, but this is not the case for vision-language models and vision-language tasks, as we see here. \\
 - More efficient VLM architectures needed for scalable high-resolution multi-image processing. Not only this, but for the use of VLMs and VLAs in robots in general, the ability to process multiple images at once and keep them in context is extremely important. \\
+- Other vision tasks to try: object detection, segmentation, captioning to support a contrastive learner, etc.
 }
 
 
-\begin{frame}{Key Contributions}
-\framesubtitle{How did we help?}
-  \vspace{-1em}
-  \begin{itemize}
-    \item Advancing the understanding of few-shot transfer of VLMs:
-    \begin{itemize}
-      \item by providing a comprehensive evaluation framework for assessing VLM transfer capabilities
-      \item by providing practical guidelines for their transfer to dataset annotation tasks to train task-specific downstream models
-    \end{itemize}
-    \item Empirical findings suggest downstream models are resilient to label noise, which:
-    \begin{itemize}
-      \item is significant for deploying these systems in resource-constrained environments
-      \item suggests that VLMs can support the learning of smaller, task-specific models despite imperfect predictions
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-\note{}
-
 % \section{Q\&A}
 \begin{frame}{Thank You!}
-  \vspace{2em}
+  \vspace{6em}
   \centering
   \vfill
   {\LARGE \textbf{Questions?}}
   \vfill
-  \vspace{2em}
+  \vspace{6em}
   \raggedright\textbf{Contact:}
   \begin{itemize}
     \item shinas.shaji@smail.inf.h-brs.de
@@ -122,3 +118,11 @@
   \end{itemize}
   \vfill
 \end{frame}
+\note{
+Q: Why were advanced models such as GPT-4o and other closed-source models not used in the work? \\
+A: Multiple reasons: \\
+- compute analysis cannot be performed, as memory usage cannot be read, times are dependent on network, and the size of the model is unknown \\
+- we focus on open-source models, for whom the architectural details are known. This enables us to see, for example, that the perciever-resampler architecture used in one of our models performs quite well, accuracy, memory, and time-wise \\
+- we cannot be sure that our datasets are in the dataset training mix for closed-source models. Open-source work typically also mentions the training data mix and datasets used. Remember, we needed to check how few-shot learning performs when we know that similar tasks are not in the pre-training data for the model \\
+- closed-source models can get quite expensive when we need to push a whole dataset through them. We can however use batched inferences for half the cost. However, the code and processing would require overhauls to support this, and this was perhaps beyond scope
+}
