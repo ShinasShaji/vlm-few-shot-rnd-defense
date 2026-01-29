@@ -1,7 +1,3 @@
-# HBRS beamer template
+# R\&D Project Defense: VLM-Few-Shot
 
-[![Build Status](https://travis-ci.org/mas-group/beamer-template.svg?branch=master)](https://travis-ci.org/mas-group/beamer-template)
-
-You can add a third party logo by using the command `\thirdpartylogo{path/to/your/image}`.
-
-Heavily adapted from [Masaryk University beamper template](https://www.overleaf.com/latex/templates/fibeamer-for-the-faculty-of-arts-at-the-masaryk-university-in-brno/rbtxqwnjyndf).
+This repository contains the Beamer slide deck for the R\&D Project Defense titled “Evaluation of Few-Shot Transfer of Vision-Language Foundation Models to Learn Lightweight Models for Robotic Vision Tasks.”
